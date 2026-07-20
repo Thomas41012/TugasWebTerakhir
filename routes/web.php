@@ -26,6 +26,13 @@ Route::view('profile', 'profile')
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::view('/', 'admin.dashboard')->name('dashboard');
     Route::view('/users', 'admin.users')->name('users');
+    Route::delete('/users/{user}', function(\App\Models\User $user) {
+        if ($user->role === 'admin') {
+            return back()->with('error', 'Akun admin tidak dapat dihapus!');
+        }
+        $user->delete();
+        return back()->with('success', 'User berhasil dihapus secara permanen.');
+    })->name('users.destroy');
     Route::view('/ports', 'admin.ports')->name('ports');
     Route::view('/articles', 'admin.articles')->name('articles');
 });

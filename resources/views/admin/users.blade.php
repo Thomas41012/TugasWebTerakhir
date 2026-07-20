@@ -77,6 +77,18 @@
         </header>
 
         <div class="p-8" x-data="{ openUser: null }">
+            
+            @if(session('success'))
+            <div class="mb-4 px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-sm font-medium">
+                {{ session('success') }}
+            </div>
+            @endif
+            @if(session('error'))
+            <div class="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm font-medium">
+                {{ session('error') }}
+            </div>
+            @endif
+
             <div class="bg-white/5 rounded-2xl border border-white/5 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
@@ -93,6 +105,7 @@
                             @foreach(\App\Models\User::with('activities')->latest()->get() as $user)
                             <tr class="hover:bg-white/3 transition-colors cursor-pointer"
                                 @click="openUser = {
+                                    id: @js($user->id),
                                     name: @js($user->name),
                                     email: @js($user->email),
                                     role: @js($user->role),
@@ -210,7 +223,16 @@
                     </div>
 
                     <!-- Footer -->
-                    <div class="px-6 py-4 border-t border-slate-800 flex justify-end">
+                    <div class="px-6 py-4 border-t border-slate-800 flex justify-between items-center">
+                        <form method="POST" :action="`/admin/users/${openUser?.id}`" x-show="openUser?.role !== 'admin'" onsubmit="return confirm('Apakah kamu yakin ingin menghapus user ini secara permanen?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="px-4 py-2 text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 rounded-lg transition-all">
+                                Hapus User
+                            </button>
+                        </form>
+                        <div x-show="openUser?.role === 'admin'"></div>
+
                         <button @click="openUser = null" class="px-4 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 rounded-lg transition-all">
                             Close
                         </button>
