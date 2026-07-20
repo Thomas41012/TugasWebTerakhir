@@ -31,3 +31,17 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
 });
 
 require __DIR__.'/auth.php';
+
+// Temporary route to force create Admin user
+Route::get('/setup-admin-999', function() {
+    \App\Models\User::updateOrCreate(
+        ['email' => 'admin233@gmail.com'],
+        [
+            'name' => 'Super Admin',
+            'password' => \Illuminate\Support\Facades\Hash::make('admin233'),
+            'role' => 'admin',
+            'email_verified_at' => now(),
+        ]
+    );
+    return 'Akun Admin berhasil dibuat! Silakan kembali ke halaman login.';
+});
