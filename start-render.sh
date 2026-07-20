@@ -6,6 +6,9 @@ sed -i "s/listen 80;/listen ${PORT:-80};/g" /etc/nginx/sites-available/default
 # Run database migrations
 php artisan migrate --force
 
+# Jalankan seeder (abaikan error jika data sudah ada sebelumnya)
+php artisan db:seed --force || true
+
 # Start PHP-FPM in background
 php-fpm -D
 
