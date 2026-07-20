@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-echo "==> Running migrations..."
+echo "==> Running migrations and seeders..."
 php artisan migrate --force
+php artisan db:seed --force
 
 echo "==> Linking storage..."
 php artisan storage:link --force 2>/dev/null || true
