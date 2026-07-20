@@ -1,0 +1,5 @@
+# PHP version
+NIXPACKS_PHP_VERSION=8.2
+
+# Node version for building assets
+NIXPACKS_NODE_VERSION=20
