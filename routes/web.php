@@ -1,0 +1,33 @@
+<?php
+
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
+
+Route::get(
+    '/dashboard',
+    [DashboardController::class, 'index']
+)->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get(
+    '/countries/{country}',
+    [CountryController::class, 'detail']
+)->middleware(['auth'])->whereNumber('country')->name('countries.detail');
+
+Route::view('profile', 'profile')
+    ->middleware(['auth'])
+    ->name('profile');
+
+// Admin Routes
+Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
+    Route::view('/', 'admin.dashboard')->name('dashboard');
+    Route::view('/users', 'admin.users')->name('users');
+    Route::view('/ports', 'admin.ports')->name('ports');
+    Route::view('/articles', 'admin.articles')->name('articles');
+});
+
+require __DIR__.'/auth.php';
