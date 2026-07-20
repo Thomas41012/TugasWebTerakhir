@@ -99,6 +99,7 @@
                                 <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Role</th>
                                 <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Verified</th>
                                 <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Joined</th>
+                                <th class="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5">
@@ -142,6 +143,17 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-slate-400">{{ $user->created_at->format('d M Y') }}</td>
+                                <td class="px-6 py-4 text-right">
+                                    @if($user->role !== 'admin')
+                                    <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}" @click.stop onsubmit="return confirm('Apakah kamu yakin ingin menghapus user ini secara permanen?');" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-3 py-1.5 text-[11px] font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 rounded-lg transition-all">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
