@@ -553,9 +553,9 @@ new class extends Component
 
                     </div>
 
-                    {{-- ENDPOINT --}}
+                    {{-- ENDPOINT: Hanya admin yang boleh melihat --}}
 
-                    @if (! empty($api['endpoint']))
+                    @if (! empty($api['endpoint']) && auth()->check() && auth()->user()->role === 'admin')
 
                         <div
                             class="mt-4 rounded-lg border border-slate-800 bg-slate-900/70 p-3"
