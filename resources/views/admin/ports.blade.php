@@ -77,69 +77,7 @@
         </header>
 
         <div class="p-8">
-
-            {{-- Port Stats --}}
-            <div class="grid grid-cols-3 gap-5 mb-8">
-                <div class="bg-white/5 rounded-2xl p-5 border border-white/5">
-                    <p class="text-sm text-slate-400 mb-1">Active Ports</p>
-                    <p class="text-3xl font-bold text-emerald-400">{{ \App\Models\Port::where('status','active')->count() }}</p>
-                </div>
-                <div class="bg-white/5 rounded-2xl p-5 border border-white/5">
-                    <p class="text-sm text-slate-400 mb-1">High Congestion</p>
-                    <p class="text-3xl font-bold text-amber-400">{{ \App\Models\Port::where('congestion_level','>=',70)->count() }}</p>
-                </div>
-                <div class="bg-white/5 rounded-2xl p-5 border border-white/5">
-                    <p class="text-sm text-slate-400 mb-1">High Risk</p>
-                    <p class="text-3xl font-bold text-red-400">{{ \App\Models\Port::where('risk_score','>=',70)->count() }}</p>
-                </div>
-            </div>
-
-            {{-- Ports Table --}}
-            <div class="bg-white/5 rounded-2xl border border-white/5 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-white/5">
-                                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Port Name</th>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Country</th>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Type</th>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Congestion</th>
-                                <th class="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Risk</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5">
-                            @foreach(\App\Models\Port::with('country')->orderBy('risk_score','desc')->take(30)->get() as $port)
-                            <tr class="hover:bg-white/3 transition-colors">
-                                <td class="px-6 py-3 font-medium text-white">{{ $port->name }}</td>
-                                <td class="px-6 py-3 text-slate-400">{{ $port->country?->name ?? 'N/A' }}</td>
-                                <td class="px-6 py-3 text-slate-400 capitalize">{{ $port->type ?? 'N/A' }}</td>
-                                <td class="px-6 py-3">
-                                    @if($port->status === 'active')
-                                        <span class="px-2 py-0.5 text-xs bg-emerald-500/20 text-emerald-400 rounded-full">Active</span>
-                                    @else
-                                        <span class="px-2 py-0.5 text-xs bg-slate-500/20 text-slate-400 rounded-full">{{ $port->status }}</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-3">
-                                    @php $c = $port->congestion_level ?? 0; @endphp
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-16 h-1.5 bg-white/10 rounded-full">
-                                            <div class="h-full rounded-full {{ $c >= 70 ? 'bg-red-400' : ($c >= 40 ? 'bg-amber-400' : 'bg-emerald-400') }}" style="width: {{ $c }}%"></div>
-                                        </div>
-                                        <span class="text-xs text-slate-400">{{ $c }}%</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-3">
-                                    @php $r = $port->risk_score ?? 0; @endphp
-                                    <span class="text-xs font-semibold {{ $r >= 70 ? 'text-red-400' : ($r >= 40 ? 'text-amber-400' : 'text-emerald-400') }}">{{ $r }}</span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <livewire:admin.port-manager />
         </div>
     </main>
 </div>

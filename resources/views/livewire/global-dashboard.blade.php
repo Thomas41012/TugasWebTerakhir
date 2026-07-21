@@ -214,7 +214,7 @@ new class extends Component
 @endphp
 
 <div
-    wire:poll.300s="refreshDashboard"
+    wire:poll.60s="refreshDashboard"
     class="min-h-screen"
 >
     <div class="mx-auto max-w-[1600px] px-4 py-8 lg:px-8">

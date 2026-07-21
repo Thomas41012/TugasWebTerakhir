@@ -35,6 +35,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     })->name('users.destroy');
     Route::view('/ports', 'admin.ports')->name('ports');
     Route::view('/articles', 'admin.articles')->name('articles');
+    Route::view('/sentiments', 'admin.sentiments')->name('sentiments');
 });
 
 require __DIR__.'/auth.php';

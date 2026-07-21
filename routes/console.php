@@ -3,6 +3,6 @@
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('supply-chain:sync')
-    ->everyFiveMinutes()
+    ->everyMinute()
     ->withoutOverlapping(10)
     ->runInBackground();
