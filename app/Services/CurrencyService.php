@@ -378,6 +378,71 @@ class CurrencyService
     }
 
     /**
+     * Mengambil seluruh kurs mata uang real-time terhadap USD dari API / Database.
+     */
+    public function getLiveExchangeRates(bool $forceRefresh = false): array
+    {
+        if (! $forceRefresh && self::$cachedRates !== null && isset(self::$cachedRates['rates'])) {
+            return self::$cachedRates['rates'];
+        }
+
+        try {
+            $baseUrl = rtrim((string) config('services.exchange_rate.url', 'https://open.er-api.com/v6'), '/');
+            $endpoint = "{$baseUrl}/latest/USD";
+            $response = Http::acceptJson()->timeout(10)->get($endpoint);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['rates']) && is_array($data['rates'])) {
+                    self::$cachedRates = $data;
+                    return $data['rates'];
+                }
+            }
+        } catch (Throwable $e) {
+            report($e);
+        }
+
+        // Fallback dari database
+        $dbRates = ['USD' => 1.0];
+        $latestRates = CurrencyRate::query()
+            ->latest('recorded_at')
+            ->get()
+            ->unique('target_currency');
+
+        foreach ($latestRates as $rate) {
+            $dbRates[strtoupper($rate->target_currency)] = (float) $rate->exchange_rate;
+        }
+
+        return $dbRates;
+    }
+
+    /**
+     * Konversi nominal uang dari satu currency ke currency lain.
+     */
+    public function convert(float $amount, string $fromCurrency, string $toCurrency, ?array $rates = null): float
+    {
+        $from = strtoupper(trim($fromCurrency));
+        $to = strtoupper(trim($toCurrency));
+
+        if ($from === $to || $amount <= 0) {
+            return $amount;
+        }
+
+        $rates = $rates ?? $this->getLiveExchangeRates();
+
+        $fromRateInUsd = $rates[$from] ?? null;
+        $toRateInUsd = $rates[$to] ?? null;
+
+        if (! $fromRateInUsd || ! $toRateInUsd || $fromRateInUsd <= 0) {
+            return 0.0;
+        }
+
+        // Hitung nilai dalam USD dulu, kemudian ke target currency
+        $amountInUsd = $amount / $fromRateInUsd;
+        return $amountInUsd * $toRateInUsd;
+    }
+
+    /**
      * Hitung response time dalam millisecond.
      */
     private function calculateResponseTime(

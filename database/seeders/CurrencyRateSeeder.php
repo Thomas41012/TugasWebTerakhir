@@ -21,10 +21,18 @@ class CurrencyRateSeeder extends Seeder
             'SGD' => 1.35,
             'MYR' => 4.70,
             'KRW' => 1380,
+            'GBP' => 0.79,
+            'CAD' => 1.36,
+            'BRL' => 5.45,
+            'RUB' => 88.00,
+            'SAR' => 3.75,
+            'THB' => 36.50,
+            'VND' => 25400,
+            'TRY' => 32.80,
         ];
 
         foreach (Country::all() as $country) {
-            $baseRate = $rates[$country->currency_code];
+            $baseRate = $rates[$country->currency_code] ?? 1.0;
 
             for ($day = 29; $day >= 0; $day--) {
                 $previousRate = $baseRate * fake()->randomFloat(4, 0.97, 1.03);

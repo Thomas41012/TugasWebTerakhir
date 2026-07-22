@@ -43,6 +43,17 @@ class PortSeeder extends Seeder
 
             ['KOR', 'Port of Busan', 'KRPUS', 'Busan', 'container', 35.1028, 129.0403, 53, 45.00],
             ['KOR', 'Port of Incheon', 'KRINC', 'Incheon', 'container', 37.4563, 126.7052, 38, 30.50],
+
+            ['GBR', 'Port of Felixstowe', 'GBFXT', 'Felixstowe', 'container', 51.9566, 1.3090, 42, 36.00],
+            ['FRA', 'Port of Le Havre', 'FRLEH', 'Le Havre', 'container', 49.4842, 0.1086, 36, 31.00],
+            ['CAN', 'Port of Vancouver', 'CAVAN', 'Vancouver', 'container', 49.2827, -123.1207, 44, 37.50],
+            ['BRA', 'Port of Santos', 'BRSSZ', 'Santos', 'container', -23.9608, -46.3339, 58, 51.00],
+            ['RUS', 'Port of Saint Petersburg', 'RULED', 'Saint Petersburg', 'container', 59.9343, 30.3351, 62, 57.00],
+            ['SAU', 'Jeddah Islamic Port', 'JEDJED', 'Jeddah', 'container', 21.4858, 39.1925, 48, 42.00],
+            ['THA', 'Laem Chabang Port', 'THLCH', 'Chonburi', 'container', 13.0800, 100.9100, 50, 43.50],
+            ['VNM', 'Cat Lai Port', 'VNCLI', 'Ho Chi Minh City', 'container', 10.7672, 106.7903, 55, 48.00],
+            ['NLD', 'Port of Rotterdam', 'NLRTM', 'Rotterdam', 'container', 51.9244, 4.4777, 30, 25.00],
+            ['TUR', 'Port of Ambarli', 'TRAMB', 'Istanbul', 'container', 40.9700, 28.6800, 47, 40.50],
         ];
 
         foreach ($ports as $port) {

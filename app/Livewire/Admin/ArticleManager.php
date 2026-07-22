@@ -65,7 +65,7 @@ class ArticleManager extends Component
     {
         $this->validate();
 
-        Article::updateOrCreate(['id' => $this->articleId], [
+        $article = Article::updateOrCreate(['id' => $this->articleId], [
             'user_id' => auth()->id(),
             'country_id' => $this->country_id ?: null,
             'title' => $this->title,
@@ -76,7 +76,29 @@ class ArticleManager extends Component
             'published_at' => $this->status === 'published' ? now() : null,
         ]);
 
-        session()->flash('success', $this->articleId ? 'Article updated successfully.' : 'Article created successfully.');
+        // Auto-sync published articles to public news website
+        if ($article->status === 'published') {
+            \App\Models\News::updateOrCreate(
+                ['url' => 'article-admin-' . $article->id],
+                [
+                    'country_id' => $article->country_id,
+                    'title' => $article->title,
+                    'description' => $article->excerpt ?: Str::limit(strip_tags($article->content), 150),
+                    'content' => $article->content,
+                    'source' => 'Analisis Admin (' . (auth()->user()?->name ?? 'Admin') . ')',
+                    'category' => 'analysis',
+                    'sentiment' => 'positive',
+                    'positive_score' => 1,
+                    'negative_score' => 0,
+                    'sentiment_score' => 1.0,
+                    'published_at' => $article->published_at ?? now(),
+                ]
+            );
+        } else {
+            \App\Models\News::where('url', 'article-admin-' . $article->id)->delete();
+        }
+
+        session()->flash('success', $this->articleId ? 'Article updated and synced successfully.' : 'Article created and published successfully.');
 
         $this->closeModal();
         $this->resetInputFields();
@@ -97,6 +119,7 @@ class ArticleManager extends Component
 
     public function delete($id)
     {
+        \App\Models\News::where('url', 'article-admin-' . $id)->delete();
         Article::find($id)->delete();
         session()->flash('success', 'Article deleted successfully.');
     }
