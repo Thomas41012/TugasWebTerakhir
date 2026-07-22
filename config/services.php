@@ -86,7 +86,7 @@ return [
     'rest_countries' => [
         'url' => env(
             'REST_COUNTRIES_BASE_URL',
-            'https://restcountries.com/v5'
+            'https://restcountries.com/v3.1'
         ),
     ],
 
